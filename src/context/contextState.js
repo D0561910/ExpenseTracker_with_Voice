@@ -84,7 +84,6 @@ const Provider = ({ children }) => {
         obj.data = jsonObj.data;
         data.push(obj);
       });
-      var json = JSON.stringify(data);
     };
     fetchData();
   };
