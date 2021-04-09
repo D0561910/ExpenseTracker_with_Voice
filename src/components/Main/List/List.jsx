@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   List as MUIList,
   ListItem,
@@ -13,14 +13,31 @@ import { Delete, MoneyOff } from "@material-ui/icons";
 
 import { ExpenseTrackerContext } from "../../../context/context";
 import useStyles from "./styles";
+import startMonth from "../../../utils/startMonth";
+import formatDate from "../../../utils/formatDate";
+import formatToday from "../../../utils/formatToday";
 
-const List = () => {
+const List = ({ type }) => {
   const classes = useStyles();
-  const { transactions, deleteTransaction } = useContext(ExpenseTrackerContext);
+  const { transactions, deleteTransaction, getTransaction } = useContext(
+    ExpenseTrackerContext
+  );
+  const todayTransaction = transactions.filter((transaction) => {
+    return transaction.data.date === formatToday(new Date());
+  });
+  const showTransaction = type === "daily" ? todayTransaction : transactions;
+  const showDelete = type === "daily" ? true : false;
+
+  useEffect(() => {
+    getTransaction(startMonth(), formatDate(new Date()));
+  }, [getTransaction]);
 
   return (
-    <MUIList dense={false} className={classes.list}>
-      {transactions.map((transaction) => (
+    <MUIList
+      dense={false}
+      className={type === "daily" ? classes.list : classes.monthlyList}
+    >
+      {showTransaction.map((transaction) => (
         <Slide
           direction="down"
           in
@@ -32,27 +49,43 @@ const List = () => {
             <ListItemAvatar>
               <Avatar
                 className={
-                  transaction.type === "Income"
+                  transaction.data.type === "Income"
                     ? classes.avatarIncome
-                    : classes.avatarExpense
+                    : transaction.data.type === "Expense"
+                    ? classes.avatarExpense
+                    : classes.avatarOwe
                 }
               >
                 <MoneyOff />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
-              primary={transaction.category}
-              secondary={`$${transaction.amount} - ${transaction.date}`}
+              primary={`Category: ${transaction.data.category} ~ ${transaction.data.item}`}
+              secondary={`$${transaction.data.price} - ${transaction.data.date}`}
             />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => deleteTransaction(transaction.id)}
-              >
-                <Delete />
-              </IconButton>
-            </ListItemSecondaryAction>
+            {showDelete && (
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTransaction(transaction.id)}
+                >
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>
+            )}
+            {transaction.data.type === "Owe" && (
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTransaction(transaction.id)}
+                >
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>
+            )}
+            {showDelete && <ListItemSecondaryAction></ListItemSecondaryAction>}
           </ListItem>
         </Slide>
       ))}

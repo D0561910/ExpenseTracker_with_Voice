@@ -22,6 +22,19 @@ const expenseColors = [
   "#cc474b",
   "#f55b5f",
 ];
+const oweColors = [
+  "#e3f2fd",
+  "#bbdefb",
+  "#90caf9",
+  "#64b5f6",
+  "#42a5f5",
+  "#2196f3",
+  "#1e88e5",
+  "#1976d2",
+  "#1565c0",
+  "#59bfff",
+  "#26abff",
+];
 
 export const incomeCategories = [
   { type: "Business", amount: 0, color: incomeColors[0] },
@@ -49,7 +62,22 @@ export const expenseCategories = [
   { type: "Other", amount: 0, color: expenseColors[10] },
 ];
 
+export const oweCategories = [
+  { type: "Bills", amount: 0, color: oweColors[0] },
+  { type: "Car", amount: 0, color: oweColors[1] },
+  { type: "Clothes", amount: 0, color: oweColors[2] },
+  { type: "Travel", amount: 0, color: oweColors[3] },
+  { type: "Food", amount: 0, color: oweColors[4] },
+  { type: "Shopping", amount: 0, color: oweColors[5] },
+  { type: "House", amount: 0, color: oweColors[6] },
+  { type: "Entertainment", amount: 0, color: oweColors[7] },
+  { type: "Phone", amount: 0, color: oweColors[8] },
+  { type: "Pets", amount: 0, color: oweColors[9] },
+  { type: "Other", amount: 0, color: oweColors[10] },
+];
+
 export const resetCategories = () => {
   incomeCategories.forEach((c) => (c.amount = 0));
   expenseCategories.forEach((c) => (c.amount = 0));
+  oweCategories.forEach((c) => (c.amount = 0));
 };

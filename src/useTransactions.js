@@ -4,23 +4,32 @@ import { ExpenseTrackerContext } from "./context/context";
 import {
   incomeCategories,
   expenseCategories,
+  oweCategories,
   resetCategories,
 } from "./constants/categories";
 
 const useTransactions = (title) => {
   resetCategories();
+  // const { transactions, getBalance } = useContext(ExpenseTrackerContext);
   const { transactions } = useContext(ExpenseTrackerContext);
-  const rightTransactions = transactions.filter((t) => t.type === title);
+  const rightTransactions = transactions.filter((t) => t.data.type === title);
   const total = rightTransactions.reduce(
-    (acc, currVal) => (acc += currVal.amount),
+    (acc, currVal) => (acc += parseFloat(currVal.data.price)),
     0
   );
-  const categories = title === "Income" ? incomeCategories : expenseCategories;
+  const categories =
+    title === "Income"
+      ? incomeCategories
+      : title === "Expense"
+      ? expenseCategories
+      : oweCategories;
+
+  // getBalance();
 
   rightTransactions.forEach((t) => {
-    const category = categories.find((c) => c.type === t.category);
+    const category = categories.find((c) => c.type === t.data.category);
 
-    if (category) category.amount += t.amount;
+    if (category) category.amount += parseFloat(t.data.price);
   });
 
   const filteredCategories = categories.filter((sc) => sc.amount > 0);

@@ -17,6 +17,7 @@ export default makeStyles((theme) => ({
   },
   cartContent: {
     paddingTop: 0,
+    height: "25vh"
   },
   divider: {
     margin: "20px 0",
